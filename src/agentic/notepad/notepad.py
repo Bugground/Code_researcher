@@ -16,10 +16,13 @@ class Notepad(BaseModel):
         self.notes = []
 
     def to_markdown(self) -> str:
+        content = ""
         if len(self.notes) == 0:
-            return "# Notepad\n\n(empty)\n\n> Should call the `add_note()` tool immediately to add your first note."
+            content = "(empty)\n\n> Should call the `add_note()` tool immediately to add your first note."
         else:
-            return f"# Notepad\n\n{'\n\n'.join([note.content for note in self.notes])}"
+            for note in self.notes:
+                content += f"## {note.content}\n\n"
+        return f"# Notepad\n\n{content}"
 
 
 def create_notepad() -> Notepad:
