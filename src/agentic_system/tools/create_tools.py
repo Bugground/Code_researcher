@@ -22,9 +22,18 @@ class ReadFileArgs(BaseModel):
     """
     The path to the file to read.
     """
-    line_range: tuple[int, int] | None = None
+
+    from_line: int | None = None
     """
     The line range to read. Start and end are inclusive. `1` means the first line.
+    If `from_line` is provided, `to_line` is required.
+    """
+
+    to_line: int | None = None
+    """
+    The line range to read. Start and end are inclusive. `1` means the first line.
+    If both are `None`, read the whole file.
+    If `to_line` is provided, `from_line` is required.
     """
 
 
@@ -34,10 +43,12 @@ class SearchInFoldersArgs(BaseModel):
     The keyword to search for. Case-insensitive.
     "abc bcd" means to search for lines exactly contains "abc bcd".
     """
+
     folders: list[str]
     """
     The folders to search in.
     """
+
     file_extensions: list[str]
     """
     The file extensions to search in. e.g. `["py", "md", "ts". "tsx"]`.
@@ -62,47 +73,32 @@ def create_tools_for_project(project: Project) -> list[Tool]:
         StructuredTool.from_function(
             name="file_tree",
             func=project.file_tree,
-            description="Get the file tree of the current repository",
+            description="Get the file tree of the current repository.",
             args_schema=ZeroArgs,
         ),
         StructuredTool.from_function(
             name="file_outline",
             func=project.file_outline,
-            description="Get the outline of a code file",
+            description="Get the outline of a code file.",
             args_schema=FileOutlineArgs,
         ),
         StructuredTool.from_function(
             name="search_in_folders",
             func=project.search_in_folders,
-            description="Search keyword in specific folders",
+            description="Search keyword in specific folders.",
             args_schema=SearchInFoldersArgs,
         ),
         StructuredTool.from_function(
             name="search_in_file",
             func=project.search_in_file,
-            description="Search keyword in a specific file",
+            description="Search keyword in a specific file.",
             args_schema=SearchInFileArgs,
         ),
         StructuredTool.from_function(
             name="read_file",
             func=project.read_file,
-            description="Read a file",
+            description="Read a file. To save token usage, leverage the 'from_line' and 'to_line' params to specify a range.",
             args_schema=ReadFileArgs,
         ),
     ]
     return results
-
-
-if __name__ == "__main__":
-    project = Project("/Users/henry/Desktop/code-play")
-    tools = create_tools_for_project(project)
-    print(
-        tools[3].invoke(
-            {
-                "file": "./src/core/project.py",
-                "keyword": "search",
-                "folders": ["src"],
-                "file_extensions": ["py"],
-            }
-        )
-    )

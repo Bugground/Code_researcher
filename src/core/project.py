@@ -64,5 +64,17 @@ class Project:
             result_str += f"Line {line.line_number}: {line.context}\n"
         return result_str
 
-    def read_file(self, path: str, line_range: tuple[int, int] | None = None) -> str:
-        return read_file(self.map_path(path), line_range)
+    def read_file(
+        self,
+        path: str,
+        from_line: int | None = None,
+        to_line: int | None = None,
+    ) -> str:
+        if from_line is not None and to_line is None:
+            raise ValueError("`to_line` is required if `from_line` is provided")
+        if from_line is not None and to_line is not None:
+            if from_line > to_line:
+                raise ValueError("`from_line` must be less than or equal to `to_line`")
+        if from_line is None and to_line is None:
+            return read_file(self.map_path(path))
+        return read_file(self.map_path(path), line_range=(from_line, to_line))
