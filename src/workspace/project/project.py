@@ -1,13 +1,13 @@
 import os
 
-from src.core.code import code_outline
-from src.core.fs import (
+from src.workspace.code import code_outline
+from src.workspace.fs import (
     IgnoreRule,
     file_tree,
     ignore_rules_from_gitignore_files,
     read_file,
 )
-from src.core.search import search_in_file, search_in_folders
+from src.workspace.search import search_in_file, search_in_folders
 
 
 class Project:

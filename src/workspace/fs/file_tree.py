@@ -1,6 +1,6 @@
 import os
 
-from src.core.fs.ignore_rules import IgnoreRule
+from src.workspace.fs.ignore_rules import IgnoreRule
 
 
 def file_tree(path: str, ignore_rules: list[IgnoreRule] = None) -> str:

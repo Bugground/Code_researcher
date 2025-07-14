@@ -2,7 +2,7 @@ from langchain.agents import Tool
 from langchain.tools import StructuredTool
 from pydantic import BaseModel
 
-from src.core.project import Project
+from src.workspace import Project
 
 
 class ZeroArgs(BaseModel):
@@ -68,7 +68,7 @@ class SearchInFileArgs(BaseModel):
     """
 
 
-def create_tools_for_project(project: Project) -> list[Tool]:
+def create_project_tools(project: Project) -> list[Tool]:
     results: list[Tool] = [
         StructuredTool.from_function(
             name="file_tree",

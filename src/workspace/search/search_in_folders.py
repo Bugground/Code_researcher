@@ -1,8 +1,8 @@
 import os
 import re
 
-from src.core.fs import IgnoreRule
-from src.core.search import FileSearchResult, search_in_file
+from src.workspace.fs import IgnoreRule
+from src.workspace.search import FileSearchResult, search_in_file
 
 
 def search_in_folders(

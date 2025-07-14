@@ -1,7 +1,7 @@
 {
   "dockerfile_lines": [],
   "graphs": {
-    "researcher": "./src/agentic_system/agents/researcher.py:researcher"
+    "researcher": "./src/agentic/agents/researcher.py:researcher"
   },
   "python_version": "3.12",
   "env": "./.env",
