@@ -1,7 +1,7 @@
 from langgraph.prebuilt import create_react_agent
 
-from src.agentic.models import create_chat_model
 from src.agentic.tools import create_project_tools
+from src.llm.models import create_chat_model
 from src.workspace import Project
 
 
