@@ -79,7 +79,7 @@ def create_project_tools(project: Project) -> list[Tool]:
         StructuredTool.from_function(
             name="file_outline",
             func=project.file_outline,
-            description="Get the outline of a code file.",
+            description="Get the outline of a code file. Only Python files are supported.",
             args_schema=FileOutlineArgs,
         ),
         StructuredTool.from_function(
