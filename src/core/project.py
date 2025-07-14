@@ -10,7 +10,7 @@ from src.core.fs import (
 from src.core.search import search_in_file, search_in_folders
 
 
-class Workspace:
+class Project:
     ignore_rules: list[IgnoreRule]
 
     def __init__(self, work_dir: str):
@@ -24,9 +24,6 @@ class Workspace:
         if path.startswith(self.work_dir):
             return path.replace(self.work_dir, ".")
         return path
-
-    def read_file(self, path: str, line_range: tuple[int, int] | None = None) -> str:
-        return read_file(self.map_path(path), line_range)
 
     def file_tree(self) -> str:
         return file_tree(self.work_dir, ignore_rules=self.ignore_rules)
@@ -67,12 +64,5 @@ class Workspace:
             result_str += f"Line {line.line_number}: {line.context}\n"
         return result_str
 
-
-if __name__ == "__main__":
-    workspace = Workspace("/Users/henry/Desktop/code-play")
-    search_result = workspace.search_in_folders(
-        "search",
-        ["src"],
-        ["py"],
-    )
-    print(search_result)
+    def read_file(self, path: str, line_range: tuple[int, int] | None = None) -> str:
+        return read_file(self.map_path(path), line_range)
