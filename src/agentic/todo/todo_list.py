@@ -41,14 +41,13 @@ class TodoList(BaseModel):
     def to_markdown(self) -> str:
         content = ""
         if len(self.items) == 0:
-            content = "(empty)\n\n> Should call the `add_todo` tool immediately to add TODO items as a your first plan."
+            content = "(empty)\n\n> Should call the `add_todo` tool immediately to add Todo items as a your first plan."
         else:
             for item in self.items:
                 content += f"- [{'x' if item.is_done else ' '}] #{item.id}: {item.content.replace('\n', ' | ')}\n"
         return f"""# Todo List
 
 {content}
-
 > Never ever forget to call the `mark_todo_as_done()` tool to update the status.
 > Always call the `add_todo()` tool to update the plan before you start working on it."""
 
