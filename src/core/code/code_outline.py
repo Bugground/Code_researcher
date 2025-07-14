@@ -1,9 +1,16 @@
 import ast
 
 
-def outline_of_python_file(path: str) -> str:
+def code_outline(file_path: str) -> str:
+    if file_path.endswith(".py"):
+        return python_outline(file_path)
+    else:
+        raise ValueError(f"Unsupported code file extension: {file_path}")
+
+
+def python_outline(file_path: str) -> str:
     try:
-        with open(path, "r", encoding="utf-8") as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             file_content = file.read()
 
         tree = ast.parse(file_content)
@@ -59,7 +66,7 @@ def outline_of_python_file(path: str) -> str:
         return "\n".join(outline)
 
     except FileNotFoundError:
-        return f"Error: File not found at path '{path}'"
+        return f"Error: File not found at path '{file_path}'"
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -67,4 +74,4 @@ def outline_of_python_file(path: str) -> str:
 # 示例用法
 if __name__ == "__main__":
     path_to_file = "/Users/henry/Desktop/code-play/src/core/workspace.py"  # 替换为你的 .py 文件路径
-    print(outline_of_python_file(path_to_file))
+    print(python_outline(path_to_file))

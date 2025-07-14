@@ -1,6 +1,6 @@
 import os
 
-from src.core.code import outline_of_python_file
+from src.core.code import code_outline
 from src.core.fs import (
     IgnoreRule,
     file_tree,
@@ -31,9 +31,9 @@ class Workspace:
     def file_tree(self) -> str:
         return file_tree(self.work_dir, ignore_rules=self.ignore_rules)
 
-    def outline_of_file(self, path: str) -> str:
+    def file_outline(self, path: str) -> str:
         if path.endswith(".py"):
-            return outline_of_python_file(self.map_path(path))
+            return code_outline(self.map_path(path))
         else:
             raise ValueError(f"Unsupported code file extension: {path}")
 

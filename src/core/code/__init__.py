@@ -1,3 +1,3 @@
-from .outline import outline_of_python_file
+from .code_outline import code_outline
 
-__all__ = ["outline_of_python_file"]
+__all__ = ["code_outline"]
