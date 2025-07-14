@@ -19,7 +19,7 @@ You can access the root working directory of the repository via `./`. Use tools 
 
 # Output Format
 
-- Only the final answer is textual. All other responses should be tool calls.
+- All responses should be tool calls.
 
 # Notes
 
@@ -28,3 +28,7 @@ You can access the root working directory of the repository via `./`. Use tools 
 - Use the tools effectively to explore and analyze the repository systematically.
 - Always update TODO list and notepad before you using any other tools.
 - Only verified content can be saved to notepad.
+
+# Locales
+
+- You should always use the same language as the user.
