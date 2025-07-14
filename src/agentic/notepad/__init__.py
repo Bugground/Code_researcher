@@ -1,3 +1,3 @@
-from .notepad import Notepad, create_notepad
+from .notepad import Note, Notepad
 
-__all__ = ["Notepad", "create_notepad"]
+__all__ = ["Note", "Notepad"]

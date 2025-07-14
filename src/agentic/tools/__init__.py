@@ -1,5 +1,11 @@
-from .notepad_tools import create_notepad_tools
+from .notepad_tools import add_note
 from .project_tools import create_project_tools
-from .todo_list_tools import create_todo_list_tools
+from .todo_list_tools import add_todo, mark_todo_as_done, remove_todo
 
-__all__ = ["create_project_tools", "create_notepad_tools", "create_todo_list_tools"]
+__all__ = [
+    "create_project_tools",
+    "add_note",
+    "add_todo",
+    "mark_todo_as_done",
+    "remove_todo",
+]

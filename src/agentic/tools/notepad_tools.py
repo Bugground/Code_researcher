@@ -1,22 +1,33 @@
-from langchain.agents import Tool
-from langchain.tools import StructuredTool
-from pydantic import BaseModel
+from typing import Annotated
 
-from src.agentic.notepad import Notepad
+from langchain.schema import HumanMessage
+from langchain.schema.messages import ToolMessage
+from langchain_core.tools import InjectedToolCallId, tool
+from langgraph.prebuilt import InjectedState
+from langgraph.types import Command
+
+from src.agentic.agents import State
 
 
-class AddNoteArgs(BaseModel):
-    content: str
-    """The content of the note to add. Use markdown format. At least contain one level-2 heading and content."""
+@tool
+def add_note(
+    content: str,
+    state: Annotated[State, InjectedState],
+    tool_call_id: Annotated[str, InjectedToolCallId],
+):
+    """
+    Add a markdown note to the notepad. Each note should contain at least one level-2 heading and content.
 
-
-def create_notepad_tools(notepad: Notepad) -> list[Tool]:
-    results: list[Tool] = [
-        StructuredTool.from_function(
-            name="add_note",
-            func=notepad.add_note,
-            description="Add a markdown note to the notepad. Each note should contain at least one level-2 heading and content.",
-            args_schema=AddNoteArgs,
-        ),
-    ]
-    return results
+    Args:
+        content: The markdown content of the note to add.
+    """
+    state.notepad.add_note(content)
+    return Command(
+        update={
+            "notepad": state.notepad,
+            "messages": [
+                ToolMessage("Done", tool_call_id=tool_call_id),
+                HumanMessage(content=state.notepad.to_markdown(), id="notepad"),
+            ],
+        }
+    )
