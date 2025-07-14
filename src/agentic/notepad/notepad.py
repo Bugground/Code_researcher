@@ -8,8 +8,8 @@ class Note(BaseModel):
 class Notepad(BaseModel):
     notes: list[Note]
 
-    def add_note(self, note_content: str):
-        note = Note(content=note_content)
+    def add_note(self, content: str):
+        note = Note(content=content)
         self.notes.append(note)
 
     def clear(self):
@@ -18,7 +18,7 @@ class Notepad(BaseModel):
     def to_markdown(self) -> str:
         content = ""
         if len(self.notes) == 0:
-            content = "(empty)\n\n> Should call the `add_note()` tool immediately to add your first note."
+            content = "(empty)\n\n> Should call the `add_note` tool immediately to add your first note."
         else:
             for note in self.notes:
                 content += f"## {note.content}\n\n"

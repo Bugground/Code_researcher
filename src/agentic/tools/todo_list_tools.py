@@ -6,7 +6,7 @@ from src.agentic.todo import TodoList
 
 
 class AddTodoArgs(BaseModel):
-    todo_content: str
+    content: str
     """The content of the TODO to add. Use single line and plain text only."""
 
 

@@ -6,7 +6,7 @@ from src.agentic.notepad import Notepad
 
 
 class AddNoteArgs(BaseModel):
-    note_content: str
+    content: str
     """The content of the note to add. Use markdown format. At least contain one level-2 heading and content."""
 
 

@@ -16,10 +16,10 @@ class TodoList(BaseModel):
     items: list[TodoItem] = []
     _id_counter: int = 0
 
-    def add_todo(self, todo: str):
+    def add_todo(self, content: str):
         item = TodoItem(
             id=self._next_id(),
-            content=todo,
+            content=content,
         )
         self.items.append(item)
 
@@ -41,7 +41,7 @@ class TodoList(BaseModel):
     def to_markdown(self) -> str:
         content = ""
         if len(self.items) == 0:
-            content = "(empty)\n\n> Should call the `add_todo()` tool immediately to add TODO items as a your first plan."
+            content = "(empty)\n\n> Should call the `add_todo` tool immediately to add TODO items as a your first plan."
         else:
             for item in self.items:
                 content += f"- [{'x' if item.is_done else ' '}] #{item.id}: {item.content.replace('\n', ' | ')}\n"
