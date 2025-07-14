@@ -69,9 +69,3 @@ def python_outline(file_path: str) -> str:
         return f"Error: File not found at path '{file_path}'"
     except Exception as e:
         return f"Error: {str(e)}"
-
-
-# 示例用法
-if __name__ == "__main__":
-    path_to_file = "/Users/henry/Desktop/code-play/src/core/workspace.py"  # 替换为你的 .py 文件路径
-    print(python_outline(path_to_file))
