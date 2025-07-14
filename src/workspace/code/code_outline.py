@@ -5,7 +5,9 @@ def code_outline(file_path: str) -> str:
     if file_path.endswith(".py"):
         return python_outline(file_path)
     else:
-        raise ValueError(f"Unsupported code file extension: {file_path}")
+        raise ValueError(
+            f"Unsupported code file extension: {file_path}. Use `read_file()` instead."
+        )
 
 
 def python_outline(file_path: str) -> str:
