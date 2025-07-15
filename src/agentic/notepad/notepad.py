@@ -18,5 +18,4 @@ class Notepad(BaseModel):
         else:
             for note in self.notes:
                 content += f"{note.content}\n\n"
-            content += "> Should call the `add_note` tool immediately to note your findings in each step."
-        return f"# Notepad\n\n{content}"
+        return f"# Notepad\n\n{content.strip()}"

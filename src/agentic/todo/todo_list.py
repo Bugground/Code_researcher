@@ -49,12 +49,7 @@ class TodoList(BaseModel):
         else:
             for item in self.items:
                 content += f"- [{'x' if item.is_done else ' '}] #{item.id}: {item.title.replace('\n', ' | ')}\n"
-        return f"""# Todo List
-
-
-{content}
-> Never ever forget to call the `mark_todo_as_done()` tool to update the status.
-> Always call the `add_todo()` tool to update the plan before you start working on it."""
+        return f"# Todo List\n\n{content.strip()}\n\n> Never ever forget to call the `mark_todo_as_done()` tool to update the status."
 
 
 def create_todo_list() -> TodoList:
