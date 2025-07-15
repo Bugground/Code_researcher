@@ -20,12 +20,12 @@ def file_tree(state: Annotated[State, InjectedState]) -> str:
 @tool(parse_docstring=True)
 def file_outline(path: str, state: Annotated[State, InjectedState]) -> str:
     """
-    Get the outline of a code file, as well as line range of each member.
+    Get the outline of a Python file, as well as line range of each member.
     Use this tool together with `read_lines` to get the code of a specific member.
     **Only Python files are supported**
 
     Args:
-        path: The path to a python code file. e.g. "./src/file.py"
+        path: The path to a Python code file. e.g. "./src/file.py"
         state:
     """
     return state.project.file_outline(path)
@@ -86,8 +86,13 @@ def read_lines(
     hint = ""
     if len(full_lines) > from_line - to_line + 1:
         hint = (
-            f"\n\n---\n\nThe content has been truncated. The actual file has {len(full_lines)} lines in total.\n"
-            + "- Use `read_lines(path, from, to)` to read the rest\n"
-            + "- Use `file_outline` to get the outline of the file, as well as line range of each member."
+            f"\n\n---\n\nThe content has been truncated. The actual file has {len(full_lines)} lines in total."
+            + "\n- Use `add_note` to note your findings **immediately**"
+            + "\n- Then use `read_lines(path, from, to)` to read the rest if needed"
+            + (
+                "\n- Use `file_outline` to get the outline of the file, as well as line range of each member."
+                if path.endswith(".py")
+                else ""
+            )
         )
     return "".join(full_lines[from_line - 1 : to_line]) + hint
