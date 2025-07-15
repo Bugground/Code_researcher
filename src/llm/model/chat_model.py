@@ -16,7 +16,7 @@ def create_ark_model(model: str = "doubao-1-5-pro-32k-250115") -> ChatOpenAI:
     )
 
 
-def create_gpt4o_model(model: str = "gpt-4o-2024-11-20") -> ChatOpenAI:
+def create_openai_model(model: str = "gpt-4o-2024-11-20") -> ChatOpenAI:
     return ChatOpenAI(
         model=model,
         base_url="https://search.bytedance.net/gpt/openapi/online/v2/crawl/openai/deployments",
@@ -30,7 +30,7 @@ def create_gpt4o_model(model: str = "gpt-4o-2024-11-20") -> ChatOpenAI:
 
 def create_chat_model() -> ChatOpenAI:
     # return create_ark_model()
-    model = create_gpt4o_model()
+    model = create_openai_model("gpt-4.1-mini-2025-04-14")
     model.callbacks = [LocalTracer("./logs")]
     return model
 
