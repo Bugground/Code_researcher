@@ -9,7 +9,7 @@ from langgraph.types import Command
 from src.agentic.agents import State
 
 
-@tool
+@tool(parse_docstring=True)
 def add_note(
     content: str,
     state: Annotated[State, InjectedState],

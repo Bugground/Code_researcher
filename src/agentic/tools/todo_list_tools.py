@@ -9,7 +9,7 @@ from langgraph.types import Command
 from src.agentic.agents import State
 
 
-@tool
+@tool(parse_docstring=True)
 def add_todo(
     title: str,
     state: Annotated[State, InjectedState],
@@ -20,6 +20,8 @@ def add_todo(
 
     Args:
         title: The title of the todo to add. Use single line and plain text only.
+        state:
+        tool_call_id:
     """
     state.todo_list.add_todo(title)
     return Command(
@@ -33,7 +35,7 @@ def add_todo(
     )
 
 
-@tool
+@tool(parse_docstring=True)
 def mark_todo_as_done(
     id: int,
     state: Annotated[State, InjectedState],
@@ -44,6 +46,8 @@ def mark_todo_as_done(
 
     Args:
         id: The id of the todo item to mark as done. The id is the number after the "#" in the todo list.
+        state:
+        tool_call_id:
     """
     state.todo_list.mark_todo_as_done(id)
     return Command(
