@@ -2,7 +2,7 @@ from .notepad_tools import add_note
 from .project_tools import (
     file_outline,
     file_tree,
-    read_file,
+    read_lines,
     search_in_file,
     search_in_folders,
 )
@@ -14,7 +14,7 @@ __all__ = [
     "file_outline",
     "file_tree",
     "mark_todo_as_done",
-    "read_file",
+    "read_lines",
     "search_in_file",
     "search_in_folders",
 ]

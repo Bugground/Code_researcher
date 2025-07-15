@@ -7,7 +7,7 @@ from src.workspace.fs import (
     IgnoreRule,
     file_tree,
     ignore_rules_from_gitignore_files,
-    read_file,
+    read_lines,
 )
 from src.workspace.search import search_in_file, search_in_folders
 
@@ -64,13 +64,11 @@ class Project(BaseModel):
             result_str += f"Line {line.line_number}: {line.context}\n"
         return result_str
 
-    def read_file(
+    def read_lines(
         self,
         path: str,
-        from_line: int | None = None,
-        to_line: int | None = None,
-    ) -> str:
-        return read_file(self.map_path(path), from_line, to_line)
+    ) -> list[str]:
+        return read_lines(self.map_path(path))
 
     def ignore_rules(self) -> list[IgnoreRule]:
         if self._ignore_rules is None:

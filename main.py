@@ -1,3 +1,5 @@
+import uuid
+
 from langchain.schema import AIMessage, BaseMessage, HumanMessage
 
 from src.agentic.agents.researcher import researcher
@@ -6,11 +8,17 @@ from src.workspace.project import Project
 
 
 def main():
+    thread_id = str(uuid.uuid4())
+    print(f"Thread ID: {thread_id}")
     project = Project(work_dir="/Users/henry/workspaces/bytedance/deer-flow")
     initial_state = create_initial_state(project)
-    initial_state.messages.append(HumanMessage(content="输入的消息可以是图片吗？"))
+    initial_state.messages.append(
+        HumanMessage(content="DeerFlow 的 Researcher 有哪些工具？")
+    )
     result = researcher.stream(
-        input=initial_state, stream_mode="values", config={"recursion_limit": 200}
+        input=initial_state,
+        stream_mode="values",
+        config={"recursion_limit": 200, "configurable": {"thread_id": thread_id}},
     )
     final_state: State
     for chunk in result:

@@ -20,10 +20,12 @@ def file_tree(state: Annotated[State, InjectedState]) -> str:
 @tool(parse_docstring=True)
 def file_outline(path: str, state: Annotated[State, InjectedState]) -> str:
     """
-    Get the outline of a code file. Only Python files are supported.
+    Get the outline of a code file, as well as line range of each member.
+    Use this tool together with `read_lines` to get the code of a specific member.
+    **Only Python files are supported**
 
     Args:
-        path: The path to the code file. e.g. "./src/file.py"
+        path: The path to a python code file. e.g. "./src/file.py"
         state:
     """
     return state.project.file_outline(path)
@@ -63,19 +65,29 @@ def search_in_file(
     return state.project.search_in_file(keyword, file)
 
 
-@tool
-def read_file(
+@tool(parse_docstring=True)
+def read_lines(
     path: str,
     from_line: int | None,
     to_line: int | None,
     state: Annotated[State, InjectedState],
 ) -> str:
     """
-    Read a file. To save token usage, leverage the 'from_line' and 'to_line' params to specify a range.
+    Read lines from a text file. To save token usage, leverage the 'from_line' and 'to_line' params to specify a range.
 
     Args:
         path: The path to the code file. e.g. "./src/file.py"
         from_line: The line number to start reading from. e.g. 10
         to_line: The line number to stop reading at. e.g. 20
     """
-    return state.project.read_file(path, from_line, to_line)
+    from_line = from_line or 1
+    to_line = to_line or 50
+    full_lines = state.project.read_lines(path)
+    hint = ""
+    if len(full_lines) > from_line - to_line + 1:
+        hint = (
+            f"\n\n---\n\nThe content has been truncated. The actual file has {len(full_lines)} lines in total.\n"
+            + "- Use `read_lines(path, from, to)` to read the rest\n"
+            + "- Use `file_outline` to get the outline of the file, as well as line range of each member."
+        )
+    return "".join(full_lines[from_line - 1 : to_line]) + hint
