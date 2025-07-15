@@ -7,7 +7,11 @@ wheels/
 *.egg-info
 
 # Virtual environments
+.env
 .venv
 
 # LangGraph
 .langgraph_api
+
+# Logs
+/logs
