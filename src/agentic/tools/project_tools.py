@@ -1,104 +1,75 @@
-from langchain.agents import Tool
-from langchain.tools import StructuredTool
-from pydantic import BaseModel
+from typing import Annotated
 
-from src.workspace import Project
+from langchain_core.tools import tool
+from langgraph.prebuilt import InjectedState
 
-
-class ZeroArgs(BaseModel):
-    pass
+from src.agentic.agents import State
 
 
-class FileOutlineArgs(BaseModel):
-    path: str
+@tool
+def file_tree(state: Annotated[State, InjectedState]) -> str:
     """
-    The path to **Python** the code file to get the outline of.
-    Only Python files are supported.
+    Get the file tree of the current repository.
     """
+    return state.project.file_tree()
 
 
-class ReadFileArgs(BaseModel):
-    path: str
+@tool
+def file_outline(path: str, state: Annotated[State, InjectedState]) -> str:
     """
-    The path to the file to read.
-    """
+    Get the outline of a code file. Only Python files are supported.
 
-    from_line: int | None = None
+    Args:
+        path: The path to the code file. e.g. "./src/file.py"
     """
-    The line range to read. Start and end are inclusive. `1` means the first line.
-    If `from_line` is provided, `to_line` is required.
-    """
-
-    to_line: int | None = None
-    """
-    The line range to read. Start and end are inclusive. `1` means the first line.
-    If both are `None`, read the whole file.
-    If `to_line` is provided, `from_line` is required.
-    """
+    return state.project.file_outline(path)
 
 
-class SearchInFoldersArgs(BaseModel):
-    keyword: str
+@tool
+def search_in_folders(
+    keyword: str,
+    folders: list[str],
+    file_extensions: list[str],
+    state: Annotated[State, InjectedState],
+) -> str:
     """
-    The keyword to search for. Case-insensitive.
-    "abc bcd" means to search for lines exactly contains "abc bcd".
-    """
+    Search keyword in specific folders.
 
-    folders: list[str]
+    Args:
+        keyword: The keyword to search for. e.g. "abc def" means search for exact match of "abc def"
+        folders: The folders to search in. e.g. ["./src", "./tests"]
+        file_extensions: The file extensions to search in. e.g. ["py", "md"]
     """
-    The folders to search in.
-    """
-
-    file_extensions: list[str]
-    """
-    The file extensions to search in. e.g. `["py", "md", "ts". "tsx"]`.
-    Wildcard like `*` is not supported.
-    """
-
-
-class SearchInFileArgs(BaseModel):
-    keyword: str
-    """
-    The keyword to search for. Case-insensitive.
-    "abc bcd" means search for files exactly contains "abc bcd".
-    """
-    file: str
-    """
-    The path to the file to search in.
-    """
+    return state.project.search_in_folders(keyword, folders, file_extensions)
 
 
-def create_project_tools(project: Project) -> list[Tool]:
-    results: list[Tool] = [
-        StructuredTool.from_function(
-            name="file_tree",
-            func=project.file_tree,
-            description="Get the file tree of the current repository.",
-            args_schema=ZeroArgs,
-        ),
-        StructuredTool.from_function(
-            name="file_outline",
-            func=project.file_outline,
-            description="Get the outline of a code file. Only Python files are supported.",
-            args_schema=FileOutlineArgs,
-        ),
-        StructuredTool.from_function(
-            name="search_in_folders",
-            func=project.search_in_folders,
-            description="Search keyword in specific folders.",
-            args_schema=SearchInFoldersArgs,
-        ),
-        StructuredTool.from_function(
-            name="search_in_file",
-            func=project.search_in_file,
-            description="Search keyword in a specific file.",
-            args_schema=SearchInFileArgs,
-        ),
-        StructuredTool.from_function(
-            name="read_file",
-            func=project.read_file,
-            description="Read a file. To save token usage, leverage the 'from_line' and 'to_line' params to specify a range.",
-            args_schema=ReadFileArgs,
-        ),
-    ]
-    return results
+@tool
+def search_in_file(
+    keyword: str, file: str, state: Annotated[State, InjectedState]
+) -> str:
+    """
+    Search keyword in a specific file.
+
+    Args:
+        keyword: The keyword to search for. e.g. "abc def" means search for exact match of "abc def"
+        file: The path to the code file. e.g. "./src/file.py"
+    """
+    return state.project.search_in_file(keyword, file)
+
+
+@tool
+def read_file(
+    path: str,
+    from_line: int | None,
+    to_line: int | None,
+    state: Annotated[State, InjectedState],
+) -> str:
+    """
+    Read a file. To save token usage, leverage the 'from_line' and 'to_line' params to specify a range.
+
+    Args:
+        path: The path to the code file. e.g. "./src/file.py"
+        from_line: The line number to start reading from. e.g. 10
+        to_line: The line number to stop reading at. e.g. 20
+    """
+    return state.project.read_file(path, from_line, to_line)

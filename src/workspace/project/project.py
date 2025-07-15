@@ -1,5 +1,7 @@
 import os
 
+from openai import BaseModel
+
 from src.workspace.code import code_outline
 from src.workspace.fs import (
     IgnoreRule,
@@ -10,12 +12,10 @@ from src.workspace.fs import (
 from src.workspace.search import search_in_file, search_in_folders
 
 
-class Project:
-    ignore_rules: list[IgnoreRule]
+class Project(BaseModel):
+    work_dir: str
 
-    def __init__(self, work_dir: str):
-        self.work_dir = work_dir
-        self.ignore_rules = [ignore_rules_from_gitignore_files(work_dir)]
+    _ignore_rules: list[IgnoreRule] | None = None
 
     def map_path(self, path: str) -> str:
         return os.path.join(self.work_dir, path)
@@ -26,7 +26,7 @@ class Project:
         return path
 
     def file_tree(self) -> str:
-        return file_tree(self.work_dir, ignore_rules=self.ignore_rules)
+        return file_tree(self.work_dir, ignore_rules=self.ignore_rules())
 
     def file_outline(self, path: str) -> str:
         if path.endswith(".py"):
@@ -44,7 +44,7 @@ class Project:
             keyword,
             [self.map_path(folder) for folder in folders],
             file_extensions,
-            self.ignore_rules,
+            self.ignore_rules(),
         )
         if len(results) == 0:
             return "No search result found"
@@ -70,11 +70,9 @@ class Project:
         from_line: int | None = None,
         to_line: int | None = None,
     ) -> str:
-        if from_line is not None and to_line is None:
-            raise ValueError("`to_line` is required if `from_line` is provided")
-        if from_line is not None and to_line is not None:
-            if from_line > to_line:
-                raise ValueError("`from_line` must be less than or equal to `to_line`")
-        if from_line is None and to_line is None:
-            return read_file(self.map_path(path))
-        return read_file(self.map_path(path), line_range=(from_line, to_line))
+        return read_file(self.map_path(path), from_line, to_line)
+
+    def ignore_rules(self) -> list[IgnoreRule]:
+        if self._ignore_rules is None:
+            self._ignore_rules = [ignore_rules_from_gitignore_files(self.work_dir)]
+        return self._ignore_rules

@@ -34,30 +34,6 @@ def add_todo(
 
 
 @tool
-def remove_todo(
-    id: int,
-    state: Annotated[State, InjectedState],
-    tool_call_id: Annotated[str, InjectedToolCallId],
-):
-    """
-    Remove an item from the todo list. You should call this tool when the todo item is not needed anymore or failed.
-
-    Args:
-        id: The id of the todo item to remove. The id is the number after the "#" in the todo list.
-    """
-    state.todo_list.remove_todo(id)
-    return Command(
-        update={
-            "todo_list": state.todo_list,
-            "messages": [
-                ToolMessage("Done", tool_call_id=tool_call_id),
-                HumanMessage(content=state.todo_list.to_markdown(), id="todo_list"),
-            ],
-        }
-    )
-
-
-@tool
 def mark_todo_as_done(
     id: int,
     state: Annotated[State, InjectedState],

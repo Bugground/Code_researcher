@@ -16,10 +16,13 @@ class TodoList(BaseModel):
     items: list[TodoItem] = []
     id_counter: int = 0
 
-    def add_todo(self, title: str):
+    def next_id(self) -> int:
         self.id_counter += 1
+        return self.id_counter
+
+    def add_todo(self, title: str):
         item = TodoItem(
-            id=self.id_counter,
+            id=self.next_id(),
             title=title,
         )
         self.items.append(item)
@@ -28,10 +31,16 @@ class TodoList(BaseModel):
         self.items = []
 
     def remove_todo(self, id: int):
-        self.items.pop(id - 1)
+        for item in self.items:
+            if item.id == id:
+                self.items.remove(item)
+                break
 
     def mark_todo_as_done(self, id: int):
-        self.items[id - 1].is_done = True
+        for item in self.items:
+            if item.id == id:
+                item.is_done = True
+                break
 
     def to_markdown(self) -> str:
         content = ""
