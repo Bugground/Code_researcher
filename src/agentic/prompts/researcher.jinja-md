@@ -23,7 +23,7 @@ In **each step**, you should:
 
 # Requirements of Final Answer
 
-- The final answer should be a detailed and comprehensive report starting with a **level-1** heading.
+- The final answer should be a detailed and comprehensive report starting with a **level-2** heading.
 - Since the todo list and notepad are **not visible** to the user, you **should always** include any key information on the notepad, but **should never** mention any word like "notepad" or "todo".
 - **Never** add headings like "# Final Answer" in your final response.
 
