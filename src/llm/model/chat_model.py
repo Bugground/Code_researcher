@@ -1,11 +1,21 @@
 import os
+from typing import Literal
 
+from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 
 from src.llm_space.tracing import LocalTracer
 
+load_dotenv()
+__provider: Literal["openai", "doubao"] = os.getenv(
+    "CODE_PLAY_MODEL_PROVIDER", "openai"
+)
+__tracer = (
+    LocalTracer("./logs") if os.getenv("CODE_PLAY_TRACING", "false") == "true" else None
+)
 
-def create_ark_model(model: str = "doubao-1-5-pro-32k-250115") -> ChatOpenAI:
+
+def create_doubao_model(model: str) -> ChatOpenAI:
     return ChatOpenAI(
         model=model,
         base_url="https://ark-cn-beijing.bytedance.net/api/v3",
@@ -16,7 +26,7 @@ def create_ark_model(model: str = "doubao-1-5-pro-32k-250115") -> ChatOpenAI:
     )
 
 
-def create_openai_model(model: str = "gpt-4o-2024-11-20") -> ChatOpenAI:
+def create_openai_model(model: str) -> ChatOpenAI:
     return ChatOpenAI(
         model=model,
         base_url="https://search.bytedance.net/gpt/openapi/online/v2/crawl/openai/deployments",
@@ -28,13 +38,24 @@ def create_openai_model(model: str = "gpt-4o-2024-11-20") -> ChatOpenAI:
     )
 
 
-def create_chat_model() -> ChatOpenAI:
-    # return create_ark_model()
-    model = create_openai_model("gpt-4.1-2025-04-14")
-    model.callbacks = [LocalTracer("./logs")]
+def create_chat_model(level: Literal["pro", "mini"]) -> ChatOpenAI:
+    global __provider, __tracer
+    model: ChatOpenAI | None = None
+    if __provider == "openai":
+        model_name = (
+            "gpt-4.1-mini-2025-04-14" if level == "mini" else "gpt-4.1-2025-04-14"
+        )
+        model = create_openai_model(model_name)
+    elif __provider == "doubao":
+        model_name = (
+            "doubao-seed-1-6-flash" if level == "pro" else "doubao-1-5-pro-32k-250115"
+        )
+        model = create_doubao_model(model_name)
+    if __tracer:
+        model.callbacks = [__tracer]
     return model
 
 
 if __name__ == "__main__":
-    chat_model = create_chat_model()
+    chat_model = create_chat_model("pro")
     print(chat_model.invoke("你好").content)
