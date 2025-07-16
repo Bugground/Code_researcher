@@ -30,6 +30,7 @@ class TodoList(BaseModel):
 
     def clear(self):
         self.items = []
+        self.id_counter = 0
 
     def remove_todo(self, id: int):
         for item in self.items:
