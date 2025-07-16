@@ -24,7 +24,7 @@ class LocalTracer(BaseCallbackHandler):
         run_id: UUID,
         **kwargs,
     ):
-        thread_id = kwargs["metadata"]["thread_id"]
+        thread_id = kwargs["metadata"].get("thread_id", run_id)
         params: dict = kwargs["invocation_params"]
         for message_list in message_lists:
             chat_completion_params = params.copy()
