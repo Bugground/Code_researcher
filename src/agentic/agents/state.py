@@ -12,12 +12,14 @@ from src.workspace.project import Project
 
 def merge_todo_list(left: dict | TodoList, right: dict | TodoList) -> TodoList:
     left = (
-        TodoList.model_validate(left) if isinstance(left, dict) else left.model_copy()
+        TodoList.model_validate(left)
+        if isinstance(left, dict)
+        else left.model_copy(deep=True)
     )
     right = (
         TodoList.model_validate(right)
         if isinstance(right, dict)
-        else right.model_copy()
+        else right.model_copy(deep=True)
     )
     left_item_ids = [item.id for item in left.items]
     for right_item in right.items:
@@ -30,8 +32,16 @@ def merge_todo_list(left: dict | TodoList, right: dict | TodoList) -> TodoList:
 
 
 def merge_notepad(left: dict | Notepad, right: dict | Notepad) -> Notepad:
-    left = Notepad.model_validate(left) if isinstance(left, dict) else left.model_copy()
-    right = Notepad.model_validate(right) if isinstance(right, dict) else right
+    left = (
+        Notepad.model_validate(left)
+        if isinstance(left, dict)
+        else left.model_copy(deep=True)
+    )
+    right = (
+        Notepad.model_validate(right)
+        if isinstance(right, dict)
+        else right.model_copy(deep=True)
+    )
     left_note_contents = [note.content for note in left.notes]
     for right_note in right.notes:
         if right_note.content not in left_note_contents:
@@ -67,6 +77,20 @@ class State(BaseModel):
     file_tree: str
     todo_list: Annotated[TodoList, merge_todo_list]
     notepad: Annotated[Notepad, merge_notepad]
+
+    def to_markdown(self) -> str:
+        return f"""# User's Question
+
+{self.messages[3].content if len(self.messages) > 3 else "(none)"}
+
+# Notepad
+
+{self.notepad.to_markdown()}
+
+# Final Answer
+
+{self.messages[-1].content if len(self.messages) > 0 else "(none)"}
+"""
 
 
 def create_initial_state(

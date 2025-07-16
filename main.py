@@ -1,9 +1,11 @@
+import json
 import uuid
 
 from langchain.schema import AIMessage, BaseMessage, HumanMessage
 
 from src.agentic.agents.researcher import researcher
 from src.agentic.agents.state import State, create_initial_state
+from src.agentic.agents.state_compressor import compress_state
 from src.workspace.project import Project
 
 
@@ -28,7 +30,12 @@ def ask(question: str):
         ):
             last_message.pretty_print()
         final_state = State.model_validate(chunk)
+    with open(f"./.threads/{thread_id}/final_state.json", "w") as f:
+        json.dump(final_state.model_dump(), f, indent=2, ensure_ascii=False)
+    compressed_state = compress_state(final_state, thread_id)
+    with open(f"./.threads/{thread_id}/compressed_state.json", "w") as f:
+        json.dump(compressed_state.model_dump(), f, indent=2, ensure_ascii=False)
 
 
 if __name__ == "__main__":
-    ask("DeerFlow 的 Deep Think 功能用的是推理模型？")
+    ask("这个项目的 Python 是什么版本的？")
