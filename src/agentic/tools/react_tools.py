@@ -26,10 +26,10 @@ def react(
 
     Args:
         thoughts: Your concise thoughts about the current state.
-        add_note: The note to add to the notepad, including your findings and key insights. Every note should starts with a level-2 heading.
+        add_note: The note to add to the notepad, including your findings and key insights. Every note should starts with a level-2 heading. **Never** add follow-up steps in the note.
         mark_todo_as_done: The ids of the todo items to be marked as done.
         ready_to_answer: Set to `true` if you're ready to generate the final answer.
-        add_todo: The items to be added to the todo list. Do not include `#` in the item. Keep empty if you're ready to generate the final answer.
+        add_todo: The follow-up steps to be added to the todo list. **Never** include `#` in the item. Keep empty if you're ready to generate the final answer.
     """
     state.notepad.add_note(add_note)
     for id in mark_todo_as_done:
