@@ -14,7 +14,7 @@ from src.llm.prompt import apply_prompt_template
 
 
 def create_researcher():
-    chat_model = create_chat_model()
+    chat_model = create_chat_model("pro")
     prompt = apply_prompt_template("researcher")
     tools = (
         file_outline,
