@@ -11,6 +11,9 @@ class Notepad(BaseModel):
     def add_note(self, content: str):
         self.notes.append(Note(content=content))
 
+    def clear(self):
+        self.notes = []
+
     def to_markdown(self) -> str:
         content = ""
         if len(self.notes) == 0:
