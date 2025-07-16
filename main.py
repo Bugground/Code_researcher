@@ -31,4 +31,4 @@ def ask(question: str):
 
 
 if __name__ == "__main__":
-    ask("如何为 DeerFlow 添加一个新的 RAG 供应商？")
+    ask("DeerFlow 的 Deep Think 功能用的是推理模型？")
