@@ -14,4 +14,4 @@ wheels/
 .langgraph_api
 
 # Logs
-/logs
+/.threads

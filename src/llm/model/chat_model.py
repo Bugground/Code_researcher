@@ -11,7 +11,9 @@ __provider: Literal["openai", "doubao"] = os.getenv(
     "CODE_PLAY_MODEL_PROVIDER", "openai"
 )
 __tracer = (
-    LocalTracer("./logs") if os.getenv("CODE_PLAY_TRACING", "false") == "true" else None
+    LocalTracer("./.threads")
+    if os.getenv("CODE_PLAY_TRACING", "false") == "true"
+    else None
 )
 
 
