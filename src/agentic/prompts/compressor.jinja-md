@@ -11,16 +11,16 @@ Compress the provided context while objectively retaining key information from t
 # Output Format
 
 ```md
-# Historical Questions
+## Historical Questions
 
-## 2. {Question_2}
+### 2. {Question_2}
 
 - Key finding 1
 - Key finding 2
 - Key finding 3
 - Key finding 4
 
-## 1. {Question_1}
+### 1. {Question_1}
 
 - Most critical finding 1
 - Most critical finding 2
