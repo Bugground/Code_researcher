@@ -7,7 +7,7 @@ from src.agentic.tools import (
     file_outline,
     file_tree,
     mark_todo_as_done,
-    read_lines,
+    read_file,
     search_in_file,
     search_in_folders,
 )
@@ -24,7 +24,7 @@ def create_researcher():
         file_outline,
         file_tree,
         mark_todo_as_done,
-        read_lines,
+        read_file,
         search_in_file,
         search_in_folders,
     )

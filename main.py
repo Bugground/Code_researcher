@@ -7,13 +7,13 @@ from src.agentic.agents.state import State, create_initial_state
 from src.workspace.project import Project
 
 
-def main():
+def ask(question: str):
     thread_id = str(uuid.uuid4())
     print(f"Thread ID: {thread_id}")
     project = Project(work_dir="/Users/henry/workspaces/bytedance/deer-flow")
     initial_state = create_initial_state(project)
     initial_state.messages.append(
-        HumanMessage(content="DeerFlow 的 Researcher 有哪些工具？")
+        HumanMessage(content=f"# User Question\n\n{question}")
     )
     result = researcher.stream(
         input=initial_state,
@@ -31,4 +31,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    ask("如何为 DeerFlow 添加一个新的 RAG provider？假设叫 MockRAGProvider")

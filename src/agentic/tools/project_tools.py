@@ -2,19 +2,22 @@ from typing import Annotated
 
 from langchain_core.tools import tool
 from langgraph.prebuilt import InjectedState
+from pydantic import BaseModel
 
 from src.agentic.agents import State
 
 
 @tool(parse_docstring=True)
-def file_tree(state: Annotated[State, InjectedState]) -> str:
+def file_tree(path: str, max_depth: int, state: Annotated[State, InjectedState]) -> str:
     """
     Get the file tree of the current repository.
 
     Args:
+        path: The path to the folder to get the file tree of. e.g. "./src"
+        max_depth: The maximum depth of the file tree. e.g. 5
         state:
     """
-    return state.project.file_tree()
+    return state.project.file_tree(path, max_depth)
 
 
 @tool(parse_docstring=True)
@@ -65,15 +68,22 @@ def search_in_file(
     return state.project.search_in_file(keyword, file)
 
 
+class ReadLinesResult(BaseModel):
+    lines: list[str]
+    total_read_lines: int
+    total_lines: int
+    all_lines_has_been_read: bool
+
+
 @tool(parse_docstring=True)
-def read_lines(
+def read_file(
     path: str,
     from_line: int | None,
     to_line: int | None,
     state: Annotated[State, InjectedState],
 ) -> str:
     """
-    Read lines from a text file. To save token usage, leverage the 'from_line' and 'to_line' params to specify a range.
+    Read from a text file. To save token usage, leverage the 'from_line' and 'to_line' params to specify a range.
 
     Args:
         path: The path to the code file. e.g. "./src/file.py"
@@ -83,16 +93,17 @@ def read_lines(
     from_line = from_line or 1
     to_line = to_line or 50
     full_lines = state.project.read_lines(path)
-    hint = ""
-    if len(full_lines) > from_line - to_line + 1:
-        hint = (
-            f"\n\n---\n\nThe content has been truncated. The actual file has {len(full_lines)} lines in total."
-            + "\n- Use `add_note` to note your findings **immediately**"
-            + "\n- Then use `read_lines(path, from, to)` to read the rest if needed"
-            + (
-                "\n- Use `file_outline` to get the outline of the file, as well as line range of each member."
-                if path.endswith(".py")
-                else ""
-            )
-        )
-    return "".join(full_lines[from_line - 1 : to_line]) + hint
+    result = ReadLinesResult(
+        lines=full_lines[from_line - 1 : to_line],
+        total_read_lines=to_line - from_line + 1,
+        total_lines=len(full_lines),
+        all_lines_has_been_read=len(full_lines) == to_line - from_line + 1,
+    )
+    return f"""The file has {result.total_lines} lines in total.
+{result.all_lines_has_been_read and "All lines have been read." or f"The content has been truncated. Lines from {from_line} to {to_line} have been returned as below:"}
+
+---
+
+```
+{"".join(result.lines)}
+```"""

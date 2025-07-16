@@ -25,8 +25,9 @@ class Project(BaseModel):
             return path.replace(self.work_dir, ".")
         return path
 
-    def file_tree(self) -> str:
-        return file_tree(self.work_dir, ignore_rules=self.ignore_rules())
+    def file_tree(self, path: str = "./", max_depth: int = 5) -> str:
+        joined_path = os.path.join(self.work_dir, path)
+        return file_tree(joined_path, max_depth, self.ignore_rules())
 
     def file_outline(self, path: str) -> str:
         if path.endswith(".py"):

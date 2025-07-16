@@ -25,7 +25,6 @@ def merge_todo_list(left: dict | TodoList, right: dict | TodoList) -> TodoList:
             left.items[left_item_ids.index(right_item.id)] = right_item
         else:
             left.items.append(right_item)
-    left.id_counter = right.id_counter
     return left
 
 
@@ -74,7 +73,7 @@ def create_initial_state(
 ) -> State:
     notepad = Notepad(notes=[])
     todo_list = TodoList(items=[])
-    file_tree = project.file_tree()
+    file_tree = f"# Project File Tree (max_depth=3)\n\n```\n{project.file_tree(path='.', max_depth=3)}\n```"
     return State(
         messages=[
             HumanMessage(content=file_tree, id="file_tree"),

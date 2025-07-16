@@ -11,19 +11,21 @@ from src.agentic.agents import State
 
 @tool(parse_docstring=True)
 def add_todo(
+    id: int,
     title: str,
     state: Annotated[State, InjectedState],
     tool_call_id: Annotated[str, InjectedToolCallId],
 ):
     """
-    Add an item to the todo list. You should call this tool to update the plan before you start working on it.
+    Add an item to the todo list.
 
     Args:
+        id: The id of the todo item to add. Make sure it is unique and sequential.
         title: The title of the todo to add. Use single line and plain text only.
         state:
         tool_call_id:
     """
-    state.todo_list.add_todo(title)
+    state.todo_list.add_todo(id, title)
     return Command(
         update={
             "todo_list": state.todo_list,
@@ -42,7 +44,7 @@ def mark_todo_as_done(
     tool_call_id: Annotated[str, InjectedToolCallId],
 ):
     """
-    Mark a specific item as done in the todo list. You should call this tool to update the status once finished.
+    Mark a specific item as done in the todo list.
 
     Args:
         id: The id of the todo item to mark as done. The id is the number after the "#" in the todo list.

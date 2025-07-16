@@ -14,15 +14,10 @@ class TodoItem(BaseModel):
 
 class TodoList(BaseModel):
     items: list[TodoItem] = []
-    id_counter: int = 0
 
-    def next_id(self) -> int:
-        self.id_counter += 1
-        return self.id_counter
-
-    def add_todo(self, title: str):
+    def add_todo(self, id: int, title: str):
         item = TodoItem(
-            id=self.next_id(),
+            id=id,
             title=title,
         )
         self.items.append(item)
