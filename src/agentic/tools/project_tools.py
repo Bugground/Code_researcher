@@ -2,9 +2,10 @@ from typing import Annotated
 
 from langchain_core.tools import tool
 from langgraph.prebuilt import InjectedState
-from pydantic import BaseModel
 
 from src.agentic.agents import State
+
+HINT = "\n\n> Call `react()` immediately to save your findings to the notepad. Then mark finished items as done and draft your follow-up items if applicable."
 
 
 @tool(parse_docstring=True)
@@ -17,7 +18,7 @@ def file_tree(path: str, max_depth: int, state: Annotated[State, InjectedState])
         max_depth: The maximum depth of the file tree. e.g. 5
         state:
     """
-    return state.project.file_tree(path, max_depth)
+    return state.project.file_tree(path, max_depth) + HINT
 
 
 @tool(parse_docstring=True)
@@ -31,7 +32,7 @@ def file_outline(path: str, state: Annotated[State, InjectedState]) -> str:
         path: The path to a Python code file. e.g. "./src/file.py"
         state:
     """
-    return state.project.file_outline(path)
+    return state.project.file_outline(path) + HINT
 
 
 @tool(parse_docstring=True)
@@ -50,7 +51,7 @@ def search_in_folders(
         file_extensions: The file extensions to search in. e.g. ["py", "md"]
         state:
     """
-    return state.project.search_in_folders(keyword, folders, file_extensions)
+    return state.project.search_in_folders(keyword, folders, file_extensions) + HINT
 
 
 @tool(parse_docstring=True)
@@ -65,45 +66,35 @@ def search_in_file(
         file: The path to the code file. e.g. "./src/file.py"
         state:
     """
-    return state.project.search_in_file(keyword, file)
-
-
-class ReadLinesResult(BaseModel):
-    lines: list[str]
-    total_read_lines: int
-    total_lines: int
-    all_lines_has_been_read: bool
+    return state.project.search_in_file(keyword, file) + HINT
 
 
 @tool(parse_docstring=True)
-def read_file(
+def read_lines(
     path: str,
     from_line: int | None,
     to_line: int | None,
     state: Annotated[State, InjectedState],
 ) -> str:
     """
-    Read from a text file. To save token usage, leverage the 'from_line' and 'to_line' params to specify a range.
+    Read lines from a text file. At least read 100 lines at a time unless you know the right line range.
+    The line number starts from 1.
 
     Args:
         path: The path to the code file. e.g. "./src/file.py"
-        from_line: The line number to start reading from. e.g. 10
-        to_line: The line number to stop reading at. e.g. 20
+        from_line: The line number to start reading from.
+        to_line: The line number to stop reading at.
     """
     from_line = from_line or 1
-    to_line = to_line or 50
+    to_line = to_line or 100
     full_lines = state.project.read_lines(path)
-    result = ReadLinesResult(
-        lines=full_lines[from_line - 1 : to_line],
-        total_read_lines=to_line - from_line + 1,
-        total_lines=len(full_lines),
-        all_lines_has_been_read=len(full_lines) == to_line - from_line + 1,
-    )
-    return f"""The file has {result.total_lines} lines in total.
-{result.all_lines_has_been_read and "All lines have been read." or f"The content has been truncated. Lines from {from_line} to {to_line} have been returned as below:"}
-
----
+    lines = full_lines[from_line - 1 : to_line]
+    total_read_lines = to_line - from_line + 1
+    total_lines = len(full_lines)
+    all_lines_has_been_read = len(full_lines) == to_line - from_line + 1
+    return f"""The file has {total_lines} lines in total.
+{all_lines_has_been_read and "All lines have been read." or f"The content has been truncated. Lines from {from_line} to {from_line + total_read_lines - 1} have been returned as below:"}
 
 ```
-{"".join(result.lines)}
-```"""
+{"".join(lines)}
+```\n{HINT}"""

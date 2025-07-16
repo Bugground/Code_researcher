@@ -14,7 +14,7 @@ class Notepad(BaseModel):
     def to_markdown(self) -> str:
         content = ""
         if len(self.notes) == 0:
-            content = "(empty)\n\n> Should call the `add_note` tool immediately to add your first note."
+            content = "(empty)\n\n> Should call the `react()` tool immediately to add your first note."
         else:
             for note in self.notes:
                 content += f"{note.content}\n\n"

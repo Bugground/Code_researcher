@@ -30,7 +30,7 @@ def create_openai_model(model: str = "gpt-4o-2024-11-20") -> ChatOpenAI:
 
 def create_chat_model() -> ChatOpenAI:
     # return create_ark_model()
-    model = create_openai_model("gpt-4.1-mini-2025-04-14")
+    model = create_openai_model("gpt-4.1-2025-04-14")
     model.callbacks = [LocalTracer("./logs")]
     return model
 

@@ -13,7 +13,7 @@ def ask(question: str):
     project = Project(work_dir="/Users/henry/workspaces/bytedance/deer-flow")
     initial_state = create_initial_state(project)
     initial_state.messages.append(
-        HumanMessage(content=f"# User Question\n\n{question}")
+        HumanMessage(content=f"# User's Problem and Requirements\n\n{question}")
     )
     result = researcher.stream(
         input=initial_state,
@@ -31,4 +31,4 @@ def ask(question: str):
 
 
 if __name__ == "__main__":
-    ask("如何为 DeerFlow 添加一个新的 RAG provider？假设叫 MockRAGProvider")
+    ask("如何为 DeerFlow 添加一个新的 RAG 供应商？")

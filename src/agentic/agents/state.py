@@ -25,6 +25,7 @@ def merge_todo_list(left: dict | TodoList, right: dict | TodoList) -> TodoList:
             left.items[left_item_ids.index(right_item.id)] = right_item
         else:
             left.items.append(right_item)
+    left.id_counter = max(left.id_counter, right.id_counter)
     return left
 
 

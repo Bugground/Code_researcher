@@ -2,12 +2,10 @@ from langgraph.prebuilt import create_react_agent
 
 from src.agentic.agents.state import State
 from src.agentic.tools import (
-    add_note,
-    add_todo,
     file_outline,
     file_tree,
-    mark_todo_as_done,
-    read_file,
+    react,
+    read_lines,
     search_in_file,
     search_in_folders,
 )
@@ -19,14 +17,12 @@ def create_researcher():
     chat_model = create_chat_model()
     prompt = apply_prompt_template("researcher")
     tools = (
-        add_note,
-        add_todo,
         file_outline,
         file_tree,
-        mark_todo_as_done,
-        read_file,
+        read_lines,
         search_in_file,
         search_in_folders,
+        react,
     )
     agent = create_react_agent(
         model=chat_model,

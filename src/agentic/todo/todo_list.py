@@ -15,9 +15,15 @@ class TodoItem(BaseModel):
 class TodoList(BaseModel):
     items: list[TodoItem] = []
 
-    def add_todo(self, id: int, title: str):
+    id_counter: int = 0
+
+    def next_id(self) -> int:
+        self.id_counter += 1
+        return self.id_counter
+
+    def add_todo(self, id: int | None, title: str):
         item = TodoItem(
-            id=id,
+            id=id or self.next_id(),
             title=title,
         )
         self.items.append(item)
@@ -40,11 +46,11 @@ class TodoList(BaseModel):
     def to_markdown(self) -> str:
         content = ""
         if len(self.items) == 0:
-            content = "(empty)\n\n> Should call the `add_todo` tool immediately to add Todo items as a your first plan."
+            content = "(empty)\n\n> Should call the `react()` tool immediately to add Todo items as a your first plan."
         else:
             for item in self.items:
                 content += f"- [{'x' if item.is_done else ' '}] #{item.id}: {item.title.replace('\n', ' | ')}\n"
-        return f"# Todo List\n\n{content.strip()}\n\n> Never ever forget to call the `mark_todo_as_done()` tool to update the status."
+        return f"# Todo List\n\n{content.strip()}"
 
 
 def create_todo_list() -> TodoList:
