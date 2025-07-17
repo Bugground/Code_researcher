@@ -56,17 +56,17 @@ def search_in_folders(
 
 @tool(parse_docstring=True)
 def search_in_file(
-    keyword: str, file: str, state: Annotated[State, InjectedState]
+    keyword: str, path: str, state: Annotated[State, InjectedState]
 ) -> str:
     """
     Search keyword in a specific file.
 
     Args:
         keyword: The keyword to search for. e.g. "abc def" means search for exact match of "abc def"
-        file: The path to the code file. e.g. "./src/file.py"
+        path: The path to the code file. e.g. "./src/file.py"
         state:
     """
-    return state.project.search_in_file(keyword, file) + HINT
+    return state.project.search_in_file(keyword, path) + HINT
 
 
 @tool(parse_docstring=True)
@@ -89,7 +89,7 @@ def read_lines(
     to_line = to_line or 100
     full_lines = state.project.read_lines(path)
     lines = full_lines[from_line - 1 : to_line]
-    total_read_lines = to_line - from_line + 1
+    total_read_lines = len(lines)
     total_lines = len(full_lines)
     all_lines_has_been_read = len(full_lines) == to_line - from_line + 1
     return f"""The file has {total_lines} lines in total.
