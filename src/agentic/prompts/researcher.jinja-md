@@ -17,7 +17,7 @@ In **each step**, you should:
   - If the problem is unsolvable, explain why it cannot be resolved without calling any tool.
   - If the problem remains unresolved, continue exploring with tools and return to Step 1.
 
-# Output Format
+# Response Format
 
 - **Only** response in tool call style.
 
@@ -33,5 +33,5 @@ Always use the same language as the user in your responses.
 
 # Notes
 
-- You **should** `read_lines` **at least 100 lines** at a time unless you know the right line range.
+- You **should** `read_lines` **at least 80 lines** at a time unless you know the right line range.
 - To avoid hallucination and repeating the same action, you **should always** include the full path of relevant files to the notepad, as well as citations in the final answer.
