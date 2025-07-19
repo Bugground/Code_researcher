@@ -19,8 +19,8 @@ def ask(question: str):
     )
     result = researcher.stream(
         input=initial_state,
-        stream_mode="values",
         config={"recursion_limit": 200, "configurable": {"thread_id": thread_id}},
+        stream_mode="values",
     )
     final_state: State
     for chunk in result:
@@ -38,4 +38,11 @@ def ask(question: str):
 
 
 if __name__ == "__main__":
-    ask("这个项目的 Python 是什么版本的？")
+    ask(
+        "今天收到白帽子安全团队发来的邮件，邮件内容如下：\n\n"
+        "Dear DeerFlow Team,\n\n"
+        "We have found a CORS security vulnerability in your project. Please fix it as soon as possible.\n\n"
+        "src/server/app.py	Updates CORS middleware configuration to use environment variables and restricts allowed methods/headers\n\n"
+        "Best regards,\n"
+        "White Hat Security Team"
+    )

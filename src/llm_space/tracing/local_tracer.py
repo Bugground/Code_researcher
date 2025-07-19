@@ -8,7 +8,7 @@ from langchain_core.messages import convert_to_openai_messages
 
 
 class LocalTracer(BaseCallbackHandler):
-    _id_counter = 0
+    _id_counter_map: dict[str, int] = {}
     _storage_path: str
 
     _run_logs: dict[str, str] = {}
@@ -46,7 +46,7 @@ class LocalTracer(BaseCallbackHandler):
 
     def _log_chat_completion(self, thread_id: str, run_id: UUID, data: dict):
         key = f"{run_id}"
-        log_id = self._next_log_id()
+        log_id = self._next_log_id(thread_id)
         file_name = os.path.join(
             self._storage_path,
             f"{thread_id}/{log_id:03d}.json",
@@ -66,6 +66,8 @@ class LocalTracer(BaseCallbackHandler):
         with open(file_name, "w") as f:
             json.dump(existing_data, f, indent=2, ensure_ascii=False)
 
-    def _next_log_id(self) -> int:
-        self._id_counter += 1
-        return self._id_counter
+    def _next_log_id(self, thread_id: str) -> int:
+        if thread_id not in self._id_counter_map:
+            self._id_counter_map[thread_id] = 0
+        self._id_counter_map[thread_id] += 1
+        return self._id_counter_map[thread_id]
