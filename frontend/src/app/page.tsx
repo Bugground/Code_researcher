@@ -46,7 +46,7 @@ export default function HomePage() {
         >
           <form className="flex gap-2" onSubmit={handleSubmit}>
             <Input
-              placeholder="Ask me anything about the DeerFlow project"
+              placeholder="Ask me anything about the project"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
