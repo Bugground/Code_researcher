@@ -1,7 +1,6 @@
 import os
 
 from openai import BaseModel
-
 from src.workspace.code import code_outline
 from src.workspace.fs import (
     IgnoreRule,
@@ -13,20 +12,20 @@ from src.workspace.search import search_in_file, search_in_folders
 
 
 class Project(BaseModel):
-    work_dir: str
+    root_dir: str
 
     _ignore_rules: list[IgnoreRule] | None = None
 
     def map_path(self, path: str) -> str:
-        return os.path.join(self.work_dir, path)
+        return os.path.join(self.root_dir, path)
 
     def rel_path(self, path: str) -> str:
-        if path.startswith(self.work_dir):
-            return path.replace(self.work_dir, ".")
+        if path.startswith(self.root_dir):
+            return path.replace(self.root_dir, ".")
         return path
 
     def file_tree(self, path: str = "./", max_depth: int = 5) -> str:
-        joined_path = os.path.join(self.work_dir, path)
+        joined_path = os.path.join(self.root_dir, path)
         return file_tree(joined_path, max_depth, self.ignore_rules())
 
     def file_outline(self, path: str) -> str:
@@ -73,5 +72,5 @@ class Project(BaseModel):
 
     def ignore_rules(self) -> list[IgnoreRule]:
         if self._ignore_rules is None:
-            self._ignore_rules = [ignore_rules_from_gitignore_files(self.work_dir)]
+            self._ignore_rules = [ignore_rules_from_gitignore_files(self.root_dir)]
         return self._ignore_rules

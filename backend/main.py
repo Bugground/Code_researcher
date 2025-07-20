@@ -2,7 +2,6 @@ import json
 import uuid
 
 from langchain.schema import AIMessage, BaseMessage, HumanMessage
-
 from src.agentic.agents.researcher import researcher
 from src.agentic.agents.state import State, create_initial_state
 from src.agentic.agents.state_compressor import compress_state
@@ -12,7 +11,7 @@ from src.workspace.project import Project
 def ask(question: str):
     thread_id = str(uuid.uuid4())
     print(f"Thread ID: {thread_id}")
-    project = Project(work_dir="/Users/henry/workspaces/bytedance/deer-flow")
+    project = Project(root_dir="/Users/henry/workspaces/bytedance/deer-flow")
     initial_state = create_initial_state(project)
     initial_state.messages.append(
         HumanMessage(content=f"# User's Problem and Requirements\n\n{question}")
