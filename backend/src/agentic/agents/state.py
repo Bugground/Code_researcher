@@ -1,10 +1,11 @@
+import os
+from dataclasses import field
 from typing import Annotated
 
 from langchain.schema import AIMessage, BaseMessage, HumanMessage
 from langchain.schema.messages import ToolMessage
 from langgraph.graph import add_messages
 from pydantic import BaseModel
-
 from src.agentic.notepad import Notepad
 from src.agentic.todo import TodoList
 from src.workspace.project import Project
@@ -73,10 +74,17 @@ class State(BaseModel):
     messages: Annotated[list[BaseMessage], merge_messages]
     remaining_steps: int = 25
 
-    project: Project
-    file_tree: str
-    todo_list: Annotated[TodoList, merge_todo_list]
-    notepad: Annotated[Notepad, merge_notepad]
+    project: Project = field(
+        default_factory=lambda: Project(
+            root_dir=os.getenv("CODE_PLAY_PROJECT_ROOT_DIR", "./")
+        )
+    )
+    todo_list: Annotated[TodoList, merge_todo_list] = field(
+        default_factory=lambda: TodoList(items=[])
+    )
+    notepad: Annotated[Notepad, merge_notepad] = field(
+        default_factory=lambda: Notepad(notes=[])
+    )
 
     def to_markdown(self) -> str:
         return f"""# User's Question

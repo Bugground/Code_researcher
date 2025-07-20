@@ -3,21 +3,22 @@ import uuid
 
 from langchain.schema import AIMessage, BaseMessage, HumanMessage
 from src.agentic.agents.researcher import researcher
-from src.agentic.agents.state import State, create_initial_state
+from src.agentic.agents.state import State
 from src.agentic.agents.state_compressor import compress_state
-from src.workspace.project import Project
 
 
 def ask(question: str):
     thread_id = str(uuid.uuid4())
     print(f"Thread ID: {thread_id}")
-    project = Project(root_dir="/Users/henry/workspaces/bytedance/deer-flow")
-    initial_state = create_initial_state(project)
-    initial_state.messages.append(
-        HumanMessage(content=f"# User's Problem and Requirements\n\n{question}")
-    )
     result = researcher.stream(
-        input=initial_state,
+        input={
+            "messages": [
+                HumanMessage(content="", id="file_tree"),
+                HumanMessage(content="", id="notepad"),
+                HumanMessage(content="", id="todo_list"),
+                HumanMessage(content=question, id="user_question"),
+            ]
+        },
         config={"recursion_limit": 200, "configurable": {"thread_id": thread_id}},
         stream_mode="values",
     )
@@ -37,11 +38,4 @@ def ask(question: str):
 
 
 if __name__ == "__main__":
-    ask(
-        "今天收到白帽子安全团队发来的邮件，邮件内容如下：\n\n"
-        "Dear DeerFlow Team,\n\n"
-        "We have found a CORS security vulnerability in your project. Please fix it as soon as possible.\n\n"
-        "src/server/app.py	Updates CORS middleware configuration to use environment variables and restricts allowed methods/headers\n\n"
-        "Best regards,\n"
-        "White Hat Security Team"
-    )
+    ask("这是一个 Python 项目吗？")
