@@ -1,15 +1,23 @@
 # code-play
 
+A very simple pilot project for AI Coding.
+
+## Prerequisites
+
+- Python 3.12 or higher (for backend)
+- Node.js 22 or higher (for frontend)
+- [pnpm](https://pnpm.io/) for Node.js package management
+- [uv](https://docs.astral.sh/uv/) for Python package management
+- `make` for running commands
+
 ## How to install
 
 ```bash
-uv sync
+make install
 ```
 
-## How to run
+## How to develop
 
 ```bash
-uv run main.py
+make dev
 ```
-
-The logs will be saved in `logs/` directory.
