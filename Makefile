@@ -62,3 +62,9 @@ dev_backend:
 dev_frontend:
 	@echo "Starting frontend development server..."
 	@cd frontend && pnpm dev
+
+stop:
+	@echo "Stopping development servers..."
+	@-lsof -t -i:2024 | xargs kill -9 > /dev/null 2>&1
+	@-lsof -t -i:3003 | xargs kill -9 > /dev/null 2>&1
+	@echo "Servers stopped."

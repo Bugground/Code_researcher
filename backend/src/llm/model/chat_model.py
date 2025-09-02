@@ -50,7 +50,7 @@ def create_chat_model(level: Literal["pro", "mini"]) -> ChatOpenAI:
         model = create_openai_model(model_name)
     elif __provider == "doubao":
         model_name = (
-            "doubao-seed-1-6-flash" if level == "pro" else "doubao-1-5-pro-32k-250115"
+            "ep-20250721201233-rqflj" if level == "pro" else "ep-20250721201116-7tdjs"
         )
         model = create_doubao_model(model_name)
     if __tracer:
